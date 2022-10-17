@@ -6,6 +6,9 @@ coed
 mead
 eddo
 
+Install requirements.txt:
+- In the terminal execute pip install -r requirements.txt
+
 Input Parameters:
 int - size of the word square.
 string - letters that should be used to generate the square.
