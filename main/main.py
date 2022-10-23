@@ -12,7 +12,7 @@ def read_words(square_size, letters):
     # Read and populate list of valid words
     f = open(words_file, "r")
     words_from_file = f.read().split("\n")
-    return [w.lower() for w in words_from_file if len(w) == square_size if word_letter_analysis(letters, w)]
+    return [str(w.lower()) for w in words_from_file if len(w) == square_size if word_letter_analysis(letters, w)]
 
 
 def word_letter_analysis(letters, word):
@@ -36,6 +36,12 @@ def generate_prefixes(words, square_size):
     return prefixes
 
 
+def valid_word_square(characters, square):
+    sorted_concatenated_square = ''.join(sorted(''.join(square)))
+    sorted_characters = ''.join(sorted(''.join(characters)))
+    return sorted_concatenated_square == sorted_characters
+
+
 def print_list():
     for item in sq:
         print(item)
@@ -44,14 +50,18 @@ def print_list():
 
 def engine(sq, prefixes, word_list, depth=0):
     for word_in_list in word_list:
-        # # Check if square has been filled or for duplicate word
-        if sq[-1] != '':
-            return
-        else:
-            sq[depth] = word_in_list
+        sq[depth] = word_in_list
+
+        if depth == 0 and word_in_list == "moan":
+            print("")
 
         if sq[-1] != '':
-            return
+            if valid_word_square(characters=letters, square=sq):
+                print_list()
+                exit(0)
+            else:
+                sq[-1] = ''
+                break
         else:
             # Get prefix for next recursion
             new_prefix = ""
@@ -71,9 +81,9 @@ if __name__ == '__main__':
 
     # Get cli params
     square_size = int(sys.argv[1])
-    letters = sys.argv[2]
+    letters = sorted(sys.argv[2])
 
-    words = read_words(square_size, letters)
+    words = sorted(read_words(square_size, letters))
 
     # Set the square size. I may change this
     sq = ['' for i in xrange(square_size)]
@@ -82,4 +92,5 @@ if __name__ == '__main__':
     prefixes = generate_prefixes(words, square_size)
 
     engine(sq, prefixes, words)
-    print_list()
+
+    print("A valid wordsquare could not be created from the characters you have provided")
